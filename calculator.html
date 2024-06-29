@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            display: inline;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 50;
+            font-family: Arial, sans-serif;
+        }
+
+        .calculator {
+            border: 5px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .display {
+            background-color: #333;
+            color: #fff;
+            font-size:x-large;
+            text-align: right;
+            padding: 20px;
+            box-sizing:border-box;
+        }
+
+        .buttons {
+            display:grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .btn {
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+            padding: 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn:active {
+            background-color: #ccc;
+        }
+
+        .operator {
+            background-color: #f9a825;
+            color: #fff;
+        }
+
+        .clear {
+            grid-column: span 4;
+            background-color: #d32f2f;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="btn" data-value="7">7</button>
+            <button class="btn" data-value="8">8</button>
+            <button class="btn" data-value="9">9</button>
+            <button class="btn operator" data-value="/">/</button>
+
+            <button class="btn" data-value="4">4</button>
+            <button class="btn" data-value="5">5</button>
+            <button class="btn" data-value="6">6</button>
+            <button class="btn operator" data-value="*">*</button>
+
+            <button class="btn" data-value="1">1</button>
+            <button class="btn" data-value="2">2</button>
+            <button class="btn" data-value="3">3</button>
+            <button class="btn operator" data-value="-">-</button>
+
+            <button class="btn" data-value="0">0</button>
+            <button class="btn" data-value=".">.</button>
+            <button class="btn" data-value="=">=</button>
+            <button class="btn operator" data-value="+">+</button>
+
+            <button class="btn clear" data-value="C">C</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let currentInput = '';
+            let operator = '';
+            let previousInput = '';
+
+            function updateDisplay(value) {
+                $('#display').text(value);
+            }
+
+            $('.btn').on('click', function() {
+                let value = $(this).data('value');
+
+                if (value === 'C') {
+                    currentInput = '';
+                    operator = '';
+                    previousInput = '';
+                    updateDisplay('0');
+                    return;
+                }
+
+                if (value === '=') {
+                    if (currentInput && previousInput && operator) {
+                        let result = eval(previousInput + operator + currentInput);
+                        updateDisplay(result);
+                        previousInput = result;
+                        currentInput = '';
+                        operator = '';
+                    }
+                    return;
+                }
+
+                if ($(this).hasClass('operator')) {
+                    if (currentInput) {
+                        if (previousInput && operator) {
+                            previousInput = eval(previousInput + operator + currentInput);
+                            updateDisplay(previousInput);
+                        } else {
+                            previousInput = currentInput;
+                        }
+                        currentInput = '';
+                    }
+                    operator = value;
+                } else {
+                    currentInput += value;
+                    updateDisplay(currentInput);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
